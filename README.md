@@ -8,7 +8,9 @@ Simple custom linux kernel drivers
 1. Compile the driver into a module, which can be loaded
    as a character device.  This will produce a .ko file.
 
+    <code>
     $ cd drivers && make
+    </code>
 
 2. Make a new device node
 
@@ -35,7 +37,6 @@ Simple custom linux kernel drivers
 
     $ cat /dev/erin
     $ echo "hi" > /dev/erin
->>>>>>> 4be929f6b3042ee0eb5a67d6f6316bc898f78e94
 
 ... If something goes wrong, and your kernel doesn't have
 CONFIG_MODULE_FORCE_UNLOAD set, you have no choice but to reboot.
