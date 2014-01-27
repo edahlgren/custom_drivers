@@ -14,29 +14,41 @@ Simple custom linux kernel drivers
 
 2. Make a new device node
 
-    $ sudo mknod /dev/erin c 250 0
+    <code>
+    $ sudo mknod /dev/erin c 250 0<br>
     $ sudo chmod a+r+w /dev/erin
+    </code>
 
 3. Insert a module into the linux kernel
 
+    <code>
     $ sudo insmod erin.ko
+    </code>
 
 4. Check that the module is loaded
 
+    <code>
     $ cat /proc/modules | grep erin
+    </code>
  
 5. Check that the module is listed as a character device
 
+    <code>
     $ cat /proc/devices | grep erin
+    </code>
 
 6. Watch what the device is doing
 
+    <code>
     $ tail -f /var/log/{messages,kernel,dmesg,syslog}
+    </code>
 
 7. Try using it
 
-    $ cat /dev/erin
+    <code>
+    $ cat /dev/erin<br>
     $ echo "hi" > /dev/erin
+    </code>
 
 ... If something goes wrong, and your kernel doesn't have
 CONFIG_MODULE_FORCE_UNLOAD set, you have no choice but to reboot.
