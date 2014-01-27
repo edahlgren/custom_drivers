@@ -40,8 +40,8 @@
 struct semaphore sem;
 
 // The static msg this character device gives to consumers.
-static char* MSG = "This is a static message from erin, coming from kernel memory.";
-static int MSG_SIZE = sizeof(MSG);
+static const char MSG[] = "This is a static message from erin, coming from kernel memory.\n\0";
+static const ssize_t MSG_SIZE = sizeof(MSG);
 
 int erin_open(struct inode *inode, struct file *f)
 {
@@ -69,7 +69,28 @@ ssize_t erin_read(struct file *f, char *buf, size_t count, loff_t *offp)
   // Called when a process tries to read from this device.
   // If the user is to get any data, we need to copy
   // any kernel buffers here to the user space buffer buf.
-  return copy_to_user(buf, MSG, MSG_SIZE);
+
+  if (*offp >= MSG_SIZE) {
+    // if the position is behind the end of the msg, there is nothing to read.
+    printk(KERN_INFO "/dev/erin: the position is behind the end of the msg, there is nothing to read\n");
+    return 0;
+  }
+
+  if (*offp + count > MSG_SIZE) {
+    // If the user tries to read more than we have.
+    count = MSG_SIZE - *offp;
+    printk(KERN_INFO "/dev/erin: resetting the count %ld\n", count);
+  }
+
+  if (copy_to_user(buf, MSG + *offp, count) != 0) {
+    printk(KERN_INFO "/dev/erin: copy_to_user couldn't copy all of the bytes");
+    return -EFAULT;
+  }
+  
+  // Move the reading position forwards.
+  *offp += count;
+  printk(KERN_INFO "/dev/erin: read out %ld\n", count);
+  return count;
 }
 
 ssize_t erin_write(struct file *f, const char *buf, size_t count, loff_t *offp)
