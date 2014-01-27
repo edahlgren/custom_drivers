@@ -22,3 +22,6 @@ Simple custom linux kernel drivers
 5. Check that the module is listed as a character device
     $ cat /proc/devices | grep erin
 
+... If something goes wrong, and your kernel doesn't have
+CONFIG_MODULE_FORCE_UNLOAD set, you have no choice but to reboot.
+

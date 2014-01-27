@@ -134,6 +134,10 @@ int erin_init(void)
     printk("Could not load erin character device\n");
     return ret;
   }
+
+  // finally, initialize the semaphore.
+  sema_init(&sem, 1);
+
   return 0;
 }
 
