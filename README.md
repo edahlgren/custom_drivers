@@ -3,13 +3,36 @@ custom_drivers
 
 Simple custom linux kernel drivers
 
+####kthreads.c: single suicidal kernel thread
+
+!. Compile the task initialization and cleanup into
+   a module.  This will produce a .ko file.
+
+   <code>
+   cd drivers/kthreads && make
+   </code>
+
+2. Insert the module into the kernel
+
+   <code>
+   sudo insmod kthreads.ko
+   </code>
+
+3. Check that the task is running and watch
+   the task lifecycle
+
+   <code>
+   ps -ef | grep erin_thread
+   tail -f /var/log/{messages,kernel,dmesg,syslog}
+   </code>
+
 ####erin.c: static msg producer and sink device
 
 1. Compile the driver into a module, which can be loaded
    as a character device.  This will produce a .ko file.
 
     <code>
-    $ cd drivers && make
+    $ cd drivers/character_device && make
     </code>
 
 2. Make a new device node

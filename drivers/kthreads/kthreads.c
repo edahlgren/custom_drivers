@@ -27,12 +27,12 @@ static const char TASK_NAME[] = "erins_task";
  *
  * re: schedule: http://www.linuxjournal.com/article/8144
  */
-int task_fn()
+int task_fn(void *data)
 {
-  printk(KERN_INFO "task is executing\n");
-
   unsigned long j0,j1;
   int delay = 60*HZ;
+
+  printk(KERN_INFO "task is executing\n");
 
   // A jiffy is the time between two
   // ticks of the system timer interrupt.
@@ -138,6 +138,6 @@ void task_cleanup(void)
 /*
  * Create the module.
  */
-MODULE_LISCENSE("GPL");
-module_init(task_init)
+MODULE_LICENSE("GPL");
+module_init(task_init);
 module_exit(task_cleanup);
