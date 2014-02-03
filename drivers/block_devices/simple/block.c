@@ -149,6 +149,7 @@ void block_cleanup(void)
  */
 int block_init(void)
 {
+  printk(KERN_INFO "initializing block device module\n");
 
   //
   spin_lock_init(&lock);
@@ -157,12 +158,14 @@ int block_init(void)
   size = NSECTORS * LOGICAL_BLOCK_SIZE;
   data = vmalloc(size);
   if (data == NULL) {
+    printk(KERN_INFO "block_init: could not malloc a block of size %lu\n", size);
     return -ENOMEM;
   }
 
   //
   queue = blk_init_queue(block_request, &lock);
   if (queue == NULL) {
+    printk(KERN_INFO "block_init: could not initialize blk queue\n");
     block_cleanup();
     return -ENOMEM;
   }
@@ -173,6 +176,7 @@ int block_init(void)
   //
   major_number = register_blkdev(major_number, DEVICE_NAME);
   if (major_number < 0) {
+    printk(KERN_INFO "block_init: could not register blk device, major number=%d\n", major_number);
     block_cleanup();
     return -ENOMEM;
   }
@@ -180,6 +184,7 @@ int block_init(void)
 
   gdisk = alloc_disk(16);
   if (!gdisk) {
+    printk(KERN_INFO "block_init: could not alloc gdisk\n");
     block_cleanup();
     return -ENOMEM;
   }
