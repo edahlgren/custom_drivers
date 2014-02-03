@@ -26,13 +26,13 @@ Simple custom linux kernel drivers
    tail -f /var/log/{messages,kernel,dmesg,syslog}
    </code>
 
-####erin.c: static msg producer and sink device
+####erin.c: static msg producer and sink character device
 
 1. Compile the driver into a module, which can be loaded
    as a character device.  This will produce a .ko file.
 
     <code>
-    $ cd drivers/character_device && make
+    $ cd drivers/character_devices/simple && make
     </code>
 
 2. Make a new device node
@@ -69,9 +69,69 @@ Simple custom linux kernel drivers
 7. Try using it
 
     <code>
-    $ cat /dev/erin<br>
+    $ cat /dev/erin
+    <br>
     $ echo "hi" > /dev/erin
     </code>
+
+####block.c: a block device backed by simple kernel buffer
+
+1. Compile
+
+   <code>
+   $ cd drivers/block_devices/simple && make
+   </code>
+
+2. Insert the module into the kernel
+
+   <code>
+   $ sudo insmod block.ko
+   </code>
+
+3. Add a new partition the disk
+
+   <code>
+   $ fdisk /dev/sbd0
+   <br>
+   > n (new partition)
+   <br>
+   > p (primary partition)
+   <br>
+   > 1 (first partition number)
+   <br>
+   > (use defaults)
+   <br>
+   > w (write changes)
+   </code>
+
+4. Make a filesystem at the first partition
+
+   <code>
+   $ mkfs /dev/sbd0p1
+   </code>
+
+5. Mount the filesystem
+
+   <code>
+   $ mount /dev/sdb0p1 /mnt
+   </code>
+
+6. Create a file in the filesystem, and read from it,
+   and check the size.
+
+   <code>
+   $ echo "Hi erin" > /mnt/file1
+   <br>
+   $ cat /mnt/file1
+   <br>
+   $ ls /mnt
+   </code>
+
+7. Cleanup
+
+   <code>
+   $ unmount /mnt
+   </code>
 
 ... If something goes wrong, and your kernel doesn't have
 CONFIG_MODULE_FORCE_UNLOAD set, you have no choice but to reboot.
