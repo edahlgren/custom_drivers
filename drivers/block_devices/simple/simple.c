@@ -201,11 +201,15 @@ int block_init(void)
   gdisk->queue = queue;
   //
   strcpy(gdisk->disk_name, DISK_NAME);
-  //
-  set_capacity(gdisk, NSECTORS);
 
   //
+  set_capacity(gdisk, 0);
+  //
   add_disk(gdisk);
+  printk(KERN_INFO "block_init: added gendisk\n");
+
+  set_capacity(gdisk, NSECTORS);
+  printk(KERN_INFO "block_init: set capacity on gendisk to %d sectors\n", NSECTORS);
 
   return 0;
 }
