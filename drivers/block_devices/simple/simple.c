@@ -101,8 +101,7 @@ static int major_number;
  */
 int get_geo(struct block_device *dev, struct hd_geometry *geo)
 {
-  long s = size * (LOGICAL_BLOCK_SIZE / KERNEL_SECTOR_SIZE);
-  geo->cylinders = (s & -0x3f) >> 6;
+  geo->cylinders = 8192;
   geo->heads = 4;
   geo->sectors = 16;
   geo->start = 0;
